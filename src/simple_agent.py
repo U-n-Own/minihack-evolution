@@ -49,7 +49,10 @@ class Agent:
     
     def __init__(self, room):
         self.room = room
-        self.directions = {"up":(0,-1), "down":(0,1), "left":(-1,0), "right":(1,0)}
+        self.directions = {"left":(0,-1),
+                           "right":(0,1),
+                           "up":(-1,0),
+                           "down":(1,0)}
   
     def move(self, direction):
         dy,dx = self.directions[direction]
@@ -60,8 +63,14 @@ class Agent:
 
 
 room = Room(15)
-room.place_flag(7, 7)
-room.place_agent(0, 0)
+
+# randomly place the flag and agent
+room.place_agent(random.randint(0, room.size-1), random.randint(0, room.size-1))
+room.place_flag(random.randint(0, room.size-1), random.randint(0, room.size-1))
+
+
+#room.place_flag(7, 7)
+#room.place_agent(0, 0)
 
 agent = Agent(room)
 num_moves = 0
@@ -71,12 +80,16 @@ start_time = time.time()
 while not agent.capture_flag():
     
     # Move the agent in a random direction
-    room.print_room()
-    print()
-  
     direction = random.choice(list(agent.directions.keys()))
     agent.move(direction)
-    print("Moving", direction)
+    
+    
+    
+    print("\n\n")  # Add two newline characters
+    room.print_room()
+    print("\n")  # Add a newline character
+ 
+    print("Agent moved {}\n".format(direction), end="")
   
     time.sleep(0.05)
     num_moves += 1
