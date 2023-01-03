@@ -4,6 +4,9 @@ This is a simple implementation of a random Agent in a Room that moves randomly 
 import random
 import time
 
+
+from fitness_functions import FitnessFunction
+
 class Room:
     
     def __init__(self, size):
@@ -44,6 +47,31 @@ class Room:
         for row in self.grid:
             print(' '.join(row))
                  
+    
+    def move_with_euclidean_distance(self):
+    
+        """
+        These movement are done with a certain probability, our agent moves
+        with a certain probability in the most promising direction, and sometimes can move randomly
+        
+        #TODO Maybe it's better to pass the fitness function and threshold probability as a parameter
+        #FIXME The agent gets stuck if probability of use fitness is high: why?
+        """
+    
+        if random.random() > 0.8:
+            direction = random.choice(list(agent.directions.keys()))
+            agent.move(direction)
+        else:
+            fitness_function = FitnessFunction()
+            fitness = {}
+            for direction in agent.directions.keys():
+                fitness[direction] = fitness_function.evaluate_fitness_euclidean(agent, room)
+            direction = min(fitness, key=fitness.get)
+            print('Best direction:', direction, 'with fitness:', fitness[direction], '\n')
+            agent.move(direction)
+                     
+
+        print("Agent moved {}\n".format(direction), end="")
 
 class Agent:
     
@@ -69,6 +97,7 @@ room.place_agent(random.randint(0, room.size-1), random.randint(0, room.size-1))
 room.place_flag(random.randint(0, room.size-1), random.randint(0, room.size-1))
 
 
+
 #room.place_flag(7, 7)
 #room.place_agent(0, 0)
 
@@ -83,13 +112,14 @@ while not agent.capture_flag():
     direction = random.choice(list(agent.directions.keys()))
     agent.move(direction)
     
-    
-    
+
+
+    #room.move_with_euclidean_distance()
+
     print("\n\n")  # Add two newline characters
     room.print_room()
     print("\n")  # Add a newline character
  
-    print("Agent moved {}\n".format(direction), end="")
   
     time.sleep(0.05)
     num_moves += 1
