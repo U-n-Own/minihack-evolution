@@ -69,9 +69,13 @@ def main():
     print("Tha matrix in ASCII that represent the random room is:")
     printM_A(obs['chars'][i:i+15, j:j+15])
 
+    
+    (x,y) = np.where(obs['chars'] == 62)
+    
+    x=x.astype(int)[0]
+    print(x)
+    y=y.astype(int)[0]
+    print(y)
+
 if __name__ == "__main__":
     main()
-
-
-
-
