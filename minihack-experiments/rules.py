@@ -10,7 +10,6 @@ class Rule:
     agent_position: List[int, int]   #The position of the agent in the 15x15 room
 
     #The movement that the agent can perform 
-    #TODO Check if the numbers are correctly assigned to directions
     agent_movement: {0: 'south', 1: 'west', 2: 'north', 3: 'east'}
 
     def __init__(self, index_matrix: List[int, int]):
