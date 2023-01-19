@@ -63,31 +63,12 @@ def search_environment_agent_position(environment: np.ndarray):
             if int(environment[row][col]) == 64:
                 return row-i, col-j
 
-"""
-
-def main():
+def search_environment_goal_position(environment: np.ndarray):
+    """ Return staircase position inside the environment """
     
-    #Generate a Room-15x15 task
-    env=gym.make(
-        "MiniHack-Room-Random-15x15-v0",
-         observation_keys=("chars", "colors", "specials", "pixel"),
-    )
- 
-    obs = env.reset() #Generate a new environment and save the describtions arrays in obs
-    env.render() #Print the room 
-    #
-    #obs contains the "glyphs","chars",...,"pixel" arrays which describe the room
-    #See documentation for information on arrays
-    i,j = search_environment_indexes(obs['chars'])
+    i,j=search_environment_indexes(environment)
     
-    print("The matrix of int that represent the random room is:")
-    print(obs['chars'][i:i+15, j:j+15])
-    print("\n\n\n\n")
-
-    print("Tha matrix in ASCII that represent the random room is:")
-    print_room(obs['chars'][i:i+15, j:j+15])
-
-"""
-    
-
-
+    for row in range(len(environment[:,1])):
+        for col in range(len(environment[1,:])):
+            if int(environment[row][col]) == 62:
+                return row-i, col-j
