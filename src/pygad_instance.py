@@ -160,20 +160,15 @@ def fitness_function(solution, solution_idx):
      #print(distance_before, "e ", distance_after, ": ", distance_before-distance_after)
      
      auxiliar=(distance_before-distance_after)/(math.sqrt(distance_before))
+     #auxiliar=(distance_before-distance_after)
+
+
      fitness=50*auxiliar+50
      #print(fitness)
 
      return fitness
 
-def genetic_alg(list_of_rules, fitness_func):
-
-    ga_instance=pygad.GA(fitness_func=fitness_func,
-                         initial_population=list_of_rules
-                         gene_type=List[int]
-                         num_generations=100
-                         num_parents_mating=2
-                          )
-
+    
 def main():
     #Generate a Room-15x15 task
     env=gym.make(
@@ -219,8 +214,34 @@ def main():
         """
     #fit=fitness_function(list_of_rules[0], 2)
     fitness_func = fitness_function
-    fitness_value, population=genetic_alg(list_of_rules, fitness_func)
+    #fitness_value, population=genetic_alg(list_of_rules, fitness_func)
+    print("First generation\n")
+    for rule in list_of_rules:
+        print("\n",rule)
+        
+    print("#############################################################")
+    ga_instance = pygad.GA(fitness_func=fitness_func,
+                         initial_population=list_of_rules,
+                         #Gene type is a list of int of lenght 3
+                         gene_type=int,
+                         num_generations=1,
+                         num_parents_mating=2,
+                         parent_selection_type = "rws",
+                         # TODO Check crossover type
+                         crossover_type = "single_point",
+                         mutation_type = None
+                         #On generation is a print of the ga_instance.generation_complete
+                         #on_generation=on_generation()
+                         #random_.mutation_max_val
+                         #random_mutation_min_Val
+                        )
 
+    ga_instance.run()
+    
+    fitness_value, population = ga_instance.last_generation_fitness, ga_instance.last_generation_offspring_mutation 
+
+    print(population)
+    print(fitness_value)
 
 if __name__ == "__main__":
     main()
