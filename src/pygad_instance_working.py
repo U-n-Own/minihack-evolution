@@ -28,7 +28,7 @@ class Rule:
 
     movement: int
     # movement: {'north': 0, 'east': 1, 'south': 2, 'west': 3} 
-
+    
     def __init__(self):
         '''
         Initiliaze a random position and random movement
@@ -45,32 +45,80 @@ class Rule:
         #check that the rule is well defined
         before_pos_1=self.position[0]
         before_pos_2=self.position[1]
-        if self.movement==0 : 
-             before_pos_1=before_pos_1-1 #movement to norh
-        elif self.movement==1 :
-             before_pos_2=before_pos_2+1 #movement to east
-        elif self.movement==2 :
-             before_pos_1=before_pos_1+1 #movement to sud
-        elif self.movement==3:
-             before_pos_2=before_pos_2-1 #movement to west
+
+        old_position=[before_pos_1, before_pos_2]
+        before_pos_1, before_pos_2 = update_position(old_position, self.movement)
+
+        #if self.movement==0 : 
+        #    before_pos_1=before_pos_1-1 #movement to norh
+        #elif self.movement==1 :
+        #    before_pos_2=before_pos_2+1 #movement to east
+        #elif self.movement==2 :
+        #    before_pos_1=before_pos_1+1 #movement to sud
+        #elif self.movement==3:
+        #    before_pos_2=before_pos_2-1 #movement to west
         
-        while before_pos_1<0 or before_pos_1>=15 or before_pos_2<0 or before_pos_2>=15:
-             print("\n RIP! Previous movement =", movement_dictionary[self.movement], "\n")
-             self.movement = random.choice(range(0, 4))
-             before_pos_1=self.position[0]
-             before_pos_2=self.position[1]
-             if self.movement==0 : 
-                 before_pos_1=before_pos_1-1 #movement to norh
-             elif self.movement==1 :
-                 before_pos_2=before_pos_2+1 #movement to east
-             elif self.movement==2 :
-                 before_pos_1=before_pos_1+1 #movement to sud
-             elif self.movement==3:
-                 before_pos_2=before_pos_2-1 #movement to west
+        #while before_pos_1<0 or before_pos_1>=15 or before_pos_2<0 or before_pos_2>=15:
+        while (not is_legal_move(old_position, self.movement)):
+               
+            print("\n RIP! Previous movement =", movement_dictionary[self.movement], "\n")
+            
+            self.movement = random.choice(range(0, 4))
+            before_pos_1=self.position[0]
+            before_pos_2=self.position[1]
+
+            old_position=[before_pos_1, before_pos_2]
+            before_pos_1, before_pos_2 = update_position(old_position, self.movement)
+            
+            #if self.movement==0 : 
+            #    before_pos_1=before_pos_1-1 #movement to norh
+            #elif self.movement==1 :
+            #    before_pos_2=before_pos_2+1 #movement to east
+            #elif self.movement==2 :
+            #    before_pos_1=before_pos_1+1 #movement to sud
+            #elif self.movement==3:
+            #    before_pos_2=before_pos_2-1 #movement to west
 
         
     def rule_list(self):
         return [self.position[0]*15+self.position[1], self.movement]
+
+def is_legal_move(old_position: List[int], movement: int) -> bool:
+    """ Check if the agent is moving in a legal position """
+
+    if movement == 0: #north
+        if old_position[0] == 0:
+            return False
+    elif movement == 1: #east
+        if old_position[1] == 14:
+            return False
+    elif movement == 2: #south
+        if old_position[0] == 14:
+            return False
+    elif movement == 3: #west
+        if old_position[1] == 0:
+            return False
+        
+    return True
+        
+def update_position(old_position: List[int], movement: int) -> List[int]:
+    """ Return updated positions of the agent in the environment         
+
+        old_position is a legal move
+        movement: int 0..3 indication of direction
+    """
+    
+    # Directions store the movements possible, if you want to move diagonally you can add more directions here
+    directions = [(0, -1), (1, 0), (0, 1), (-1, 0)] 
+    
+    new_position = [-1, -1]
+    
+    update_position = directions[movement]
+    
+    new_position[0] = old_position[0] + update_position[0]
+    new_position[1] = old_position[1] + update_position[1]
+
+    return new_position[0], new_position[1] 
 
 def print_room(environment):
     """
@@ -122,53 +170,71 @@ def search_environment_goal_position(environment: np.ndarray):
 
 
 def fitness_function(solution, solution_idx):
-     '''
-     fitness function for the importance of every rules
-     solution is a triple of int in which:
-     solution[0]=first agent position in a rule
-     solution[1]=second agent position in a rule
-     solution[2]=agent action 
-     '''
-     
-     ag_pos_before_rule_1=math.floor(solution[0]/15)
-     ag_pos_before_rule_2=solution[0] % 15
+    '''
+    fitness function for the importance of every rules
+    solution is a triple of int in which:
+    solution[0]= agent position in a rule, calculated as 15*agent position in row + agent position in column
+    solution[1]= agent movement
+    solution[2]= agent action #FIXME maybe this is not necessary anymore
+    '''
+    
+    ag_pos_before_rule_1=math.floor(solution[0]/15)
+    ag_pos_before_rule_2=solution[0] % 15
 
-     #check that the generated rule is not the goal position
-     if ag_pos_before_rule_1==GOAL_1 and ag_pos_before_rule_2==GOAL_2:
-        print("We have Goal Position")
-        return 0
-     
-     #define the new agent position after applying the action in solution[2]
-     ag_pos_after_rule_1=ag_pos_before_rule_1 
-     ag_pos_after_rule_2=ag_pos_before_rule_2
+    #check that the generated rule is not the goal position
+    if ag_pos_before_rule_1==GOAL_1 and ag_pos_before_rule_2==GOAL_2:
+       print("We have Goal Position")
+       return 0
+    
+    #define the new agent position after applying the action in solution[2]
+    ag_pos_after_rule_1=ag_pos_before_rule_1 
+    ag_pos_after_rule_2=ag_pos_before_rule_2
 
-     if solution[1]==0 : 
-         ag_pos_after_rule_1=ag_pos_after_rule_1-1 #movement to norh
-     elif solution[1]==1 :
-         ag_pos_after_rule_2=ag_pos_after_rule_2+1 #movement to east
-     elif solution[1]==2 :
-         ag_pos_after_rule_1=ag_pos_after_rule_1+1 #movement to sud
-     elif solution[1]==3:
-         ag_pos_after_rule_2=ag_pos_after_rule_2-1 #movement to west
-     
-     if ag_pos_after_rule_1<0 or ag_pos_after_rule_1>=15 or ag_pos_after_rule_2<0 or ag_pos_before_rule_2>=15:
-         return 0
+    #FIXME Debug flag for changing executing code
+    VINCENT_CODE = False
+    
+    if not VINCENT_CODE:
 
-     #print("Goal position:2", GOAL_1, ", ", GOAL_2)
-     #print("Agent position before rule:", ag_pos_before_rule_1, ",", ag_pos_before_rule_2, "; move:", movement_dictionary[solution[1]])
-     #print("Agent position after rule:", ag_pos_after_rule_1, ",",  ag_pos_after_rule_2)
+        if solution[1]==0 : 
+            ag_pos_after_rule_1=ag_pos_after_rule_1-1 #movement to norh
+        elif solution[1]==1 :
+            ag_pos_after_rule_2=ag_pos_after_rule_2+1 #movement to east
+        elif solution[1]==2 :
+            ag_pos_after_rule_1=ag_pos_after_rule_1+1 #movement to sud
+        elif solution[1]==3:
+            ag_pos_after_rule_2=ag_pos_after_rule_2-1 #movement to west
+      
+        #if not is_legal_move(new_position, solution[1]):
+        #    return 0
 
-     distance_before=np.abs(ag_pos_before_rule_1-GOAL_1)+np.abs(ag_pos_before_rule_2-GOAL_2)
-     distance_after=np.abs(ag_pos_after_rule_1-GOAL_1)+np.abs(ag_pos_after_rule_2-GOAL_2)
+        if ag_pos_after_rule_1<0 or ag_pos_after_rule_1>=15 or ag_pos_after_rule_2<0 or ag_pos_after_rule_2>=15:
+            return 0
+    else:
+    #new_position = [ag_pos_before_rule_1, ag_pos_before_rule_2]
+        new_position = [ag_pos_after_rule_1, ag_pos_after_rule_2]
 
-     #print("Distance before and after:", distance_before, ",", distance_after, "Diff:", distance_before-distance_after)
-     
-     auxiliar=(distance_before-distance_after)/(math.sqrt(distance_before))
-     fitness=50*auxiliar+50
+        #If rule is not legal (get out of map), return 0 as fitness
+    
+        ag_pos_after_rule_1, ag_pos_after_rule_2 = update_position(new_position, solution[1])    
 
-     #print("Fitness value:", fitness)
+        if not is_legal_move(new_position, solution[1]):
+            return 0
 
-     return fitness
+    #print("Goal position:2", GOAL_1, ", ", GOAL_2)
+    #print("Agent position before rule:", ag_pos_before_rule_1, ",", ag_pos_before_rule_2, "; move:", movement_dictionary[solution[1]])
+    #print("Agent position after rule:", ag_pos_after_rule_1, ",",  ag_pos_after_rule_2)
+
+    distance_before=np.abs(ag_pos_before_rule_1-GOAL_1)+np.abs(ag_pos_before_rule_2-GOAL_2)
+    distance_after=np.abs(ag_pos_after_rule_1-GOAL_1)+np.abs(ag_pos_after_rule_2-GOAL_2)
+
+    #print("Distance before and after:", distance_before, ",", distance_after, "Diff:", distance_before-distance_after)
+    
+    auxiliar=(distance_before-distance_after)/(math.sqrt(distance_before))
+    fitness=50*auxiliar+50
+
+    #print("Fitness value:", fitness)
+
+    return fitness
 
 def cross_func(istance, parents) :
     print(parents)
@@ -305,6 +371,7 @@ def main():
 
             for x in range(len(rules)):
                 if rules[x][0]==ag_position:
+                    #update_position(ag_position, rules[x][1]) 
                     if rules[x][1]==0 : 
                         agent_position_1=agent_position_1-1 #movement to norh
                     elif rules[x][1]==1 :
