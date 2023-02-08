@@ -262,7 +262,7 @@ def main():
     ga_instance = pygad.GA(fitness_func=fitness_func,
                            initial_population=list_of_rules,
                            gene_type=int,
-                           num_generations=5,
+                           num_generations=7,
                            num_parents_mating=1000,
                            parent_selection_type="rws",
                            crossover_probability=1.0,
