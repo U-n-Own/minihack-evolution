@@ -9,6 +9,9 @@ from operator import itemgetter
 
 #global GOAL_1, GOAL_2
 
+#FIXME Debug flag for changing executing code
+VINCENT_CODE = False
+
 movement_dictionary = {
     0 : "north",
     1 : "east",
@@ -46,20 +49,22 @@ class Rule:
         before_pos_1=self.position[0]
         before_pos_2=self.position[1]
 
-        old_position=[before_pos_1, before_pos_2]
-        before_pos_1, before_pos_2 = update_position(old_position, self.movement)
+        old_position = [before_pos_1, before_pos_2]
 
-        #if self.movement==0 : 
-        #    before_pos_1=before_pos_1-1 #movement to norh
-        #elif self.movement==1 :
-        #    before_pos_2=before_pos_2+1 #movement to east
-        #elif self.movement==2 :
-        #    before_pos_1=before_pos_1+1 #movement to sud
-        #elif self.movement==3:
-        #    before_pos_2=before_pos_2-1 #movement to west
+        if not VINCENT_CODE:
+            if self.movement==0 : 
+                before_pos_1=before_pos_1-1 #movement to norh
+            elif self.movement==1 :
+                before_pos_2=before_pos_2+1 #movement to east
+            elif self.movement==2 :
+                before_pos_1=before_pos_1+1 #movement to sud
+            elif self.movement==3:
+                before_pos_2=before_pos_2-1 #movement to west
+        else:
+            before_pos_1, before_pos_2 = update_position(old_position, self.movement)
         
-        #while before_pos_1<0 or before_pos_1>=15 or before_pos_2<0 or before_pos_2>=15:
-        while (not is_legal_move(old_position, self.movement)):
+        while before_pos_1<0 or before_pos_1>=15 or before_pos_2<0 or before_pos_2>=15:
+        #while (not is_legal_move(old_position, self.movement)):
                
             print("\n RIP! Previous movement =", movement_dictionary[self.movement], "\n")
             
@@ -67,17 +72,18 @@ class Rule:
             before_pos_1=self.position[0]
             before_pos_2=self.position[1]
 
-            old_position=[before_pos_1, before_pos_2]
-            before_pos_1, before_pos_2 = update_position(old_position, self.movement)
-            
-            #if self.movement==0 : 
-            #    before_pos_1=before_pos_1-1 #movement to norh
-            #elif self.movement==1 :
-            #    before_pos_2=before_pos_2+1 #movement to east
-            #elif self.movement==2 :
-            #    before_pos_1=before_pos_1+1 #movement to sud
-            #elif self.movement==3:
-            #    before_pos_2=before_pos_2-1 #movement to west
+            if VINCENT_CODE:
+                old_position=[before_pos_1, before_pos_2]
+                before_pos_1, before_pos_2 = update_position(old_position, self.movement)
+            else:
+                if self.movement==0 : 
+                    before_pos_1=before_pos_1-1 #movement to norh
+                elif self.movement==1 :
+                    before_pos_2=before_pos_2+1 #movement to east
+                elif self.movement==2 :
+                    before_pos_1=before_pos_1+1 #movement to sud
+                elif self.movement==3:
+                    before_pos_2=before_pos_2-1 #movement to west
 
         
     def rule_list(self):
@@ -190,8 +196,6 @@ def fitness_function(solution, solution_idx):
     ag_pos_after_rule_1=ag_pos_before_rule_1 
     ag_pos_after_rule_2=ag_pos_before_rule_2
 
-    #FIXME Debug flag for changing executing code
-    VINCENT_CODE = False
     
     if not VINCENT_CODE:
 
@@ -211,12 +215,14 @@ def fitness_function(solution, solution_idx):
             return 0
     else:
     #new_position = [ag_pos_before_rule_1, ag_pos_before_rule_2]
-        new_position = [ag_pos_after_rule_1, ag_pos_after_rule_2]
+        new_position = [ag_pos_before_rule_1, ag_pos_before_rule_2]
 
         #If rule is not legal (get out of map), return 0 as fitness
     
         ag_pos_after_rule_1, ag_pos_after_rule_2 = update_position(new_position, solution[1])    
 
+        new_position2_ = [ag_pos_after_rule_1, ag_pos_after_rule_2]
+            
         if not is_legal_move(new_position, solution[1]):
             return 0
 
