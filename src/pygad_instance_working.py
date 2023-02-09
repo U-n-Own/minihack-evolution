@@ -10,7 +10,7 @@ from operator import itemgetter
 #global GOAL_1, GOAL_2
 
 #FIXME Debug flag for changing executing code
-VINCENT_CODE = False
+VINCENT_CODE = True
 
 movement_dictionary = {
     0 : "north",
@@ -49,7 +49,6 @@ class Rule:
         before_pos_1=self.position[0]
         before_pos_2=self.position[1]
 
-        old_position = [before_pos_1, before_pos_2]
 
         if not VINCENT_CODE:
             if self.movement==0 : 
@@ -61,6 +60,7 @@ class Rule:
             elif self.movement==3:
                 before_pos_2=before_pos_2-1 #movement to west
         else:
+            old_position = [before_pos_1, before_pos_2]
             before_pos_1, before_pos_2 = update_position(old_position, self.movement)
         
         while before_pos_1<0 or before_pos_1>=15 or before_pos_2<0 or before_pos_2>=15:
@@ -117,10 +117,11 @@ def update_position(old_position: List[int], movement: int) -> List[int]:
     # Directions store the movements possible, if you want to move diagonally you can add more directions here
     directions = [(0, -1), (1, 0), (0, 1), (-1, 0)] 
     
-    new_position = [-1, -1]
+    new_position = [0, 0]
     
     update_position = directions[movement]
     
+    # Here we're not checking if goes out of bounds
     new_position[0] = old_position[0] + update_position[0]
     new_position[1] = old_position[1] + update_position[1]
 
@@ -181,9 +182,8 @@ def fitness_function(solution, solution_idx):
     solution is a triple of int in which:
     solution[0]= agent position in a rule, calculated as 15*agent position in row + agent position in column
     solution[1]= agent movement
-    solution[2]= agent action #FIXME maybe this is not necessary anymore
+    solution[2]= agent action #TODO this is removed from last change!
     '''
-    
     ag_pos_before_rule_1=math.floor(solution[0]/15)
     ag_pos_before_rule_2=solution[0] % 15
 
@@ -197,7 +197,7 @@ def fitness_function(solution, solution_idx):
     ag_pos_after_rule_2=ag_pos_before_rule_2
 
     
-    if not VINCENT_CODE:
+    if VINCENT_CODE:
 
         if solution[1]==0 : 
             ag_pos_after_rule_1=ag_pos_after_rule_1-1 #movement to norh
@@ -214,16 +214,14 @@ def fitness_function(solution, solution_idx):
         if ag_pos_after_rule_1<0 or ag_pos_after_rule_1>=15 or ag_pos_after_rule_2<0 or ag_pos_after_rule_2>=15:
             return 0
     else:
-    #new_position = [ag_pos_before_rule_1, ag_pos_before_rule_2]
-        new_position = [ag_pos_before_rule_1, ag_pos_before_rule_2]
+        old_position = [ag_pos_before_rule_1, ag_pos_before_rule_2]
 
-        #If rule is not legal (get out of map), return 0 as fitness
-    
-        ag_pos_after_rule_1, ag_pos_after_rule_2 = update_position(new_position, solution[1])    
+        ag_pos_after_rule_1, ag_pos_after_rule_2 = update_position(old_position, solution[1])    
 
-        new_position2_ = [ag_pos_after_rule_1, ag_pos_after_rule_2]
+        new_position_after = [ag_pos_after_rule_1, ag_pos_after_rule_2]
             
-        if not is_legal_move(new_position, solution[1]):
+        #If rule is not legal (get out of map), return 0 as fitness
+        if not is_legal_move(new_position_after, solution[1]):
             return 0
 
     #print("Goal position:2", GOAL_1, ", ", GOAL_2)
@@ -374,7 +372,6 @@ def main():
         ag_position=agent_position_1*15+agent_position_2
         
         if environment[agent_position_1][agent_position_2]==42:
-
             for x in range(len(rules)):
                 if rules[x][0]==ag_position:
                     #update_position(ag_position, rules[x][1]) 
