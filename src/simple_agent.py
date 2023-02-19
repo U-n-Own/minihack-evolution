@@ -121,7 +121,7 @@ while not agent.capture_flag():
     print("\n")  # Add a newline character
  
   
-    time.sleep(0.05)
+    time.sleep(0.10)
     num_moves += 1
     
 print("Flag captured!")
