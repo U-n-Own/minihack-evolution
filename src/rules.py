@@ -13,7 +13,7 @@ from fitness_func import fitness, normalize_fitness
 class Rule:
     def __init__(self, number_of_moves=1, x_start=0, y_start=0):
         possible_movements = [(x, y) for x in [-1, 0, 1] for y in [-1, 0, 1] if (x, y) != (0, 0)]
-        #possible_movements = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+        # possible_movements = [(1, 0), (0, 1), (-1, 0), (0, -1)]
         self.position = (random.randrange(0 + x_start, 15 + x_start), random.randrange(0 + y_start, 15 + y_start))
         self.movement = []
         for i in range(number_of_moves):
@@ -22,8 +22,9 @@ class Rule:
     def is_good(self, x_start=3, y_start=32):
         (x, y) = self.position
         for (movement_x, movement_y) in self.movement:
+            print(movement_x, movement_y)
             (x_after, y_after) = (x + movement_x, y + movement_y)
-            if not ((0 + x_start, 0 + y_start) <= (x_after, y_after) < (15 + x_start, 15 + y_start)):
+            if 0 + x_start > x_after or x_after >= 15 + x_start or 0 + y_start > y_after or y_after >= 15 + y_start:
                 return False
             (x, y) = (x_after, y_after)
         return True

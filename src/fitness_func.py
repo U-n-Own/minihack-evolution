@@ -14,11 +14,11 @@ def fitness(rule, environment):
     goal_x=goal_x[0]
     goal_y=goal_y[0]
     x, y = rule.position
-    distance_before = np.abs(x - goal_x) + np.abs(y - goal_y)
-    distance_after = np.abs(x_after - goal_x) + np.abs(y_after - goal_y)
+    distance_before = max(np.abs(x - goal_x), np.abs(y - goal_y))
+    distance_after = max(np.abs(x_after - goal_x), np.abs(y_after - goal_y))
     if distance_before != 0:
         fit = (distance_before - distance_after)/np.sqrt(distance_before)
-        fit = fit + 2
+        fit = fit + 1
     else:
         fit = 0
     return fit
