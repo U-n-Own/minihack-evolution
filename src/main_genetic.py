@@ -9,20 +9,11 @@ from itertools import product
 from rules import Rule
 from fitness_func import fitness
 
-env = gym.make("MiniHack-Room-Random-15x15-v0",
-               observation_keys=("chars", "colors", "specials", "pixel"), )
-room = env.reset()
-room = room["chars"]
-rules, fitness_list, fitness_list_norm = generate_initial_population(env, 1000)
+import sys
 
-# creating the rules with the genetic algorithm
-rules, fitness_list, fitness_list_norm = genetic_algorithm(environment=room,
-                                                           rules=rules,
-                                                           fitness_list_norm=fitness_list_norm,
-                                                           chance_for_mutation=0,
-                                                           number_of_rules=1000,
-                                                           number_of_generations=5
-                                                           )
+sys.path.append('../')
+from src.genetic_plot import average_fitness_plot
+
 movements = {
     (0, 1): 1,  # "east",
     (1, 0): 2,  # "sud",
@@ -33,6 +24,27 @@ movements = {
     (-1, 1): 4,  # "north-east"
     (-1, -1): 7  # "north-west"
 }
+
+number_of_rules = 200
+number_of_generations = 10
+
+env = gym.make("MiniHack-Room-Random-15x15-v0",
+               observation_keys=("chars", "colors", "specials", "pixel"), )
+room = env.reset()
+room = room["chars"]
+rules, fitness_list, fitness_list_norm = generate_initial_population(env, number_of_rules)
+
+# creating the rules with the genetic algorithm
+rules, fitness_list, fitness_list_norm = genetic_algorithm(environment=room,
+                                                           rules=rules,
+                                                           fitness_list_norm=fitness_list_norm,
+                                                           chance_for_mutation=0,
+                                                           number_of_rules=number_of_rules,
+                                                           number_of_generations= number_of_generations
+                                                            )
+                                                           
+
+
 rev_movements = {k: m for m, k in movements.items()}
 
 for rule, fit in zip(rules, fitness_list):
@@ -43,6 +55,7 @@ rules.sort(reverse=True)
 final_rules = -np.ones_like(room, dtype=int)
 theres_rule = np.zeros_like(room, dtype=bool)
 counter = 0
+
 for rule in rules:
     if rule.fitness <= 1:
         break
@@ -98,3 +111,6 @@ while agent_position != goal_position:
     ag_x, ag_y = agent_position
     print(agent_position)
 print(f"task completed in {count_moves} moves!")
+
+
+print("Good moves: ", counter)
