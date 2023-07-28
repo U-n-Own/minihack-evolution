@@ -11,6 +11,12 @@ from utility_func import step_dictionary, inverted_step_dictionary, movement_dic
 from rules import Rule, generate_initial_population
 from fitness_func import find_distance_grid, fitness_function
 
+def get_temperature(number_of_generation):
+    temperature=[]
+    for x in range(number_of_generation):
+        temperature.append(1-x/(number_of_generation-1))   
+    return temperature
+
 def choose_rules(numeber_of_population, norm_fitness_func):
 
     indexes_rules = range(len(norm_fitness_func))
@@ -27,9 +33,13 @@ def normalize_fitness(fitness_func):
 def mutation(chance_for_mutation, rule):
 
     mutation_matrix=np.random.random(size=(15,15))
+    indexes=np.where(mutation_matrix<chance_for_mutation)
 
+    for i in range(len(indexes[0])):
+        x=indexes[0][i]
+        y=indexes[1][i]
 
-
+        rule.rules_grid[x][y]=random.randint(0,7)
 
 def genetic_algorithm(room, 
                       population, 
@@ -39,7 +49,7 @@ def genetic_algorithm(room,
                       number_of_generation):
 
     norm_fitness_func=normalize_fitness(fitness_func)
-
+    temperature=get_temperature(number_of_generation)
 
 
         
