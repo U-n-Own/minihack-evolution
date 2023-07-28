@@ -34,7 +34,7 @@ class Rule:
       
     def is_good(self):
 
-        for x in range(0, 15):
+        for x in range(1, 14):
 
             while movement_dictionary[self.rules_grid[0][x]][0]==-1:
                 self.rules_grid[0][x]=random.randint(0,7)
