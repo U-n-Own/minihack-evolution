@@ -5,7 +5,7 @@ to give one score for each rule throughout the genetic algorithm.
 
 import numpy as np
 import math
-from utility_func import step_dictionary, inverted_step_dictionary, movement_dictionary
+from utility_func import movement_dictionary
 
 def find_distance_grid(x_goal_position: int, y_goal_position: int):
 
@@ -19,8 +19,8 @@ def find_distance_grid(x_goal_position: int, y_goal_position: int):
 
 def single_position_score(distance_grid: np.ndarray, x_start: int, y_start: int, movement: int):
 
-    x_after=x_start+movement_dictionary[step_dictionary[movement]][0]
-    y_after=y_start+movement_dictionary[step_dictionary[movement]][1]
+    x_after=x_start+movement_dictionary[movement][0]
+    y_after=y_start+movement_dictionary[movement][1]
 
     distance_before=distance_grid[x_start][y_start]
     distance_after=distance_grid[x_after][y_after]

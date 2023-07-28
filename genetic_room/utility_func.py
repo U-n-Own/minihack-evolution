@@ -24,17 +24,15 @@ step_dictionary = {
     7 : "north-west",
 }
 
-inverted_step_dictionary = dict(map(reversed, step_dictionary.items()))
-
 movement_dictionary = {
-    "north" : [-1, 0],
-    "east" : [0, 1],
-    "south" : [1,0],
-    "west" : [0,-1],
-    "north-east" : [-1,1],
-    "south-east" : [1, 1],
-    "south-west" : [1, -1],
-    "north-west" : [-1, -1],
+    0 : [-1, 0],
+    1 : [0, 1],
+    2 : [1,0],
+    3 : [0,-1],
+    4 : [-1,1],
+    5 : [1, 1],
+    6 : [1, -1],
+    7 : [-1, -1],
 }
 
 #Functions

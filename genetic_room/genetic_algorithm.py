@@ -7,7 +7,7 @@ import numpy as np
 import random
 from typing import List
 from utility_func import print_room, search_environment_indexes, search_environment_agent_position, search_environment_goal_position
-from utility_func import step_dictionary, inverted_step_dictionary, movement_dictionary
+from utility_func import step_dictionary, movement_dictionary
 from rules import Rule, generate_initial_population
 from fitness_func import find_distance_grid, fitness_function
 

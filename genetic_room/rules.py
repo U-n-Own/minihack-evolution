@@ -8,7 +8,7 @@ import minihack
 import numpy as np
 import random
 from typing import List
-from utility_func import movement_dictionary, step_dictionary, inverted_step_dictionary
+from utility_func import movement_dictionary, step_dictionary
 
 arrow_dictionary = {
     0 : "\u2191",
@@ -36,22 +36,22 @@ class Rule:
 
         for x in range(0, 15):
 
-            while movement_dictionary[step_dictionary[self.rules_grid[0][x]]][0]==-1:
+            while movement_dictionary[self.rules_grid[0][x]][0]==-1:
                 self.rules_grid[0][x]=random.randint(0,7)
-            while movement_dictionary[step_dictionary[self.rules_grid[14][x]]][0]==1:
+            while movement_dictionary[self.rules_grid[14][x]][0]==1:
                 self.rules_grid[14][x]=random.randint(0,7)
-            while movement_dictionary[step_dictionary[self.rules_grid[x][0]]][1]==-1:
+            while movement_dictionary[self.rules_grid[x][0]][1]==-1:
                 self.rules_grid[x][0]=random.randint(0,7)
-            while movement_dictionary[step_dictionary[self.rules_grid[x][14]]][1]==1:
+            while movement_dictionary[self.rules_grid[x][14]][1]==1:
                 self.rules_grid[x][14]=random.randint(0,7)
         
-        while movement_dictionary[step_dictionary[self.rules_grid[0][0]]][0]==-1 or movement_dictionary[step_dictionary[self.rules_grid[0][0]]][1]==-1:
+        while movement_dictionary[self.rules_grid[0][0]][0]==-1 or movement_dictionary[self.rules_grid[0][0]][1]==-1:
                 self.rules_grid[0][0]=random.randint(0,7)
-        while movement_dictionary[step_dictionary[self.rules_grid[14][14]]][0]==1 or movement_dictionary[step_dictionary[self.rules_grid[14][14]]][1]==1:
+        while movement_dictionary[self.rules_grid[14][14]][0]==1 or movement_dictionary[self.rules_grid[14][14]][1]==1:
                 self.rules_grid[14][14]=random.randint(0,7)
-        while movement_dictionary[step_dictionary[self.rules_grid[0][14]]][0]==-1 or movement_dictionary[step_dictionary[self.rules_grid[0][14]]][1]==1:
+        while movement_dictionary[self.rules_grid[0][14]][0]==-1 or movement_dictionary[self.rules_grid[0][14]][1]==1:
                 self.rules_grid[0][14]=random.randint(0,7)
-        while movement_dictionary[step_dictionary[self.rules_grid[14][0]]][0]==1 or movement_dictionary[step_dictionary[self.rules_grid[14][0]]][1]==-1:
+        while movement_dictionary[self.rules_grid[14][0]][0]==1 or movement_dictionary[self.rules_grid[14][0]][1]==-1:
                 self.rules_grid[14][0]=random.randint(0,7) 
 
         return self.rules_grid 
