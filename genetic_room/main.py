@@ -41,13 +41,16 @@ def main():
     distance_grid=find_distance_grid(x_goal_position, y_goal_position)
 
     
+    #generate a size_of_population of rules that we insert into a list
+    list_of_rules = generate_initial_population(size_of_population=100)
 
-    list_of_rules = generate_initial_population(100)
+    #associate each rule with a score given by the fitness function
     list_of_score=[]
-    
     for x in range(len(list_of_rules)):
         score=fitness_function(list_of_rules[x], distance_grid)
         list_of_score.append(score)
+    
+
     index_list_of_score=sorted(range(len(list_of_score)), key=lambda k: list_of_score[k], reverse=True)
     list_of_score.sort(reverse=True)
     print(index_list_of_score)

@@ -12,26 +12,39 @@ from rules import Rule, generate_initial_population
 from fitness_func import find_distance_grid, fitness_function
 
 def get_temperature(number_of_generation):
+    """
+    define the temperature that we will use 
+    to lower the chance_of_mutation during generations.
+    """
     temperature=[]
     for x in range(number_of_generation):
         temperature.append(1-x/(number_of_generation-1))   
     return temperature
 
 def choose_rules(numeber_of_population, norm_fitness_func):
-
+    """
+    choose the rules with probabilities that will be the parents to 
+    generate two new rules during the genetic algorithm.
+    """
     indexes_rules = range(len(norm_fitness_func))
     return np.random.choice(indexes_rules, p=norm_fitness_func, size=len(numeber_of_population))
 
 
 def normalize_fitness(fitness_func):
-
+    """
+    fitness scores are normalized to probabilities
+    for use them in the choose_rules function.
+    """
     translate_fitness=[float(i)-min(fitness_func) for i in fitness_func]
     norm_fitness_func=[float(i)/sum(translate_fitness) for i in translate_fitness]
 
     return norm_fitness_func
 
 def mutation(chance_for_mutation, rule):
-
+    """
+    apply a mutation to the rule with a chance_of_mutation
+    probability for each position in the room.
+    """
     mutation_matrix=np.random.random(size=(15,15))
     indexes=np.where(mutation_matrix<chance_for_mutation)
 

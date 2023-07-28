@@ -103,7 +103,4 @@ def generate_initial_population(size_of_population):
     for x in range(size_of_population):
         list_of_rules.append(Rule()) 
 
-        #list_of_rules[x].print_rule()
-        #list_of_rules[x].print_rule_movement()
-
     return list_of_rules
