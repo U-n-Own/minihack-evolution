@@ -63,8 +63,7 @@ class Rule:
         while movement_dictionary[self.rules_grid[14][0]][0]==1 or movement_dictionary[self.rules_grid[14][0]][1]==-1:
                 self.rules_grid[14][0]=random.randint(0,7) 
 
-        return self.rules_grid 
-        
+        return self.rules_grid
 
     def print_rule(self):
         """
@@ -95,7 +94,7 @@ class Rule:
 
 def generate_initial_population(size_of_population):
     """
-    generate a number_of_population of rules that we insert into a list.
+    generate a size_of_population of rules that we insert into a list.
     """
 
     list_of_rules=[]

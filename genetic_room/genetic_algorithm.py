@@ -53,6 +53,9 @@ def mutation(chance_for_mutation, rule):
         y=indexes[1][i]
 
         rule.rules_grid[x][y]=random.randint(0,7)
+    
+    rule.rules_grid=rule.is_good()
+    return rule
 
 def genetic_algorithm(room, 
                       population, 
