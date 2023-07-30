@@ -45,16 +45,16 @@ def main():
     list_of_rules = generate_initial_population(size_of_population=100)
 
     #associate each rule with a score given by the fitness function
-    list_of_score=[]
+    fitness_func=[]
     for x in range(len(list_of_rules)):
         score=fitness_function(list_of_rules[x], distance_grid)
-        list_of_score.append(score)
+        fitness_func.append(score)
     
 
-    index_list_of_score=sorted(range(len(list_of_score)), key=lambda k: list_of_score[k], reverse=True)
-    list_of_score.sort(reverse=True)
+    index_list_of_score=sorted(range(len(fitness_func)), key=lambda k: fitness_func[k], reverse=True)
+    fitness_func.sort(reverse=True)
     print(index_list_of_score)
-    print(list_of_score)
+    print(fitness_func)
     list_of_rules[index_list_of_score[0]].print_rule_movement()
     list_of_rules[index_list_of_score[0]].print_rule_arrow()
     
