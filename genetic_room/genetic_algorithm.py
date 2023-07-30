@@ -18,6 +18,10 @@ def get_temperature(number_of_generation):
     to lower the chance_of_mutation during generations.
     """
     temperature=[]
+    if number_of_generation==1:
+        temperature.append(0)
+        return temperature
+    
     for x in range(number_of_generation):
         temperature.append(1-x/(number_of_generation-1))   
     return temperature
@@ -32,15 +36,15 @@ def normalize_fitness(fitness_func):
 
     return norm_fitness_func
 
-def choose_rules(numeber_of_population, norm_fitness_func):
+def choose_rules(number_of_population, norm_fitness_func):
     """
     choose the rules with probabilities that will be the parents to 
     generate two new rules during the genetic algorithm.
     """
     indexes_rules = range(len(norm_fitness_func))
-    return np.random.choice(indexes_rules, p=norm_fitness_func, size=len(numeber_of_population))
+    return np.random.choice(indexes_rules, p=norm_fitness_func, size=number_of_population)
 
-def mutation(chance_for_mutation, rule):
+def mutation(rule, chance_for_mutation):
     """
     apply a mutation to the rule with a chance_of_mutation
     probability for each position in the room.
@@ -108,7 +112,11 @@ def genetic_algorithm(distance_grid,
     
     if number_of_population<len(population):
         population[number_of_population:len(population)]=[]
+
     temperature=get_temperature(number_of_generation)
+
+    average_fitness_func=[]
+    average_fitness_func.append(np.mean(fitness_func))
 
     for i in range(number_of_generation):
 
@@ -117,6 +125,7 @@ def genetic_algorithm(distance_grid,
                                                                population,
                                                                norm_fitness_func,
                                                                chance_for_mutation*temperature[i])
-        
+        average_fitness_func.append(np.mean(fitness_func))
 
+    return population, fitness_func, average_fitness_func
         

@@ -92,14 +92,14 @@ class Rule:
                 print(arrow_dictionary[self.rules_grid[x][y]], end=' ')
             print("\n")
 
-def generate_initial_population(size_of_population):
+def generate_initial_population(number_of_population):
     """
     generate a size_of_population of rules that we insert into a list.
     """
 
     list_of_rules=[]
 
-    for x in range(size_of_population):
+    for x in range(number_of_population):
         list_of_rules.append(Rule()) 
 
     return list_of_rules

@@ -12,6 +12,7 @@ from utility_func import print_room, search_environment_indexes, search_environm
 from utility_func import step_dictionary, movement_dictionary
 from rules import Rule, generate_initial_population
 from fitness_func import find_distance_grid, fitness_function
+from genetic_algorithm import genetic_algorithm
 
 def main():
 
@@ -42,21 +43,44 @@ def main():
 
     
     #generate a size_of_population of rules that we insert into a list
-    list_of_rules = generate_initial_population(size_of_population=100)
+    population = generate_initial_population(number_of_population=10)
 
     #associate each rule with a score given by the fitness function
     fitness_func=[]
-    for x in range(len(list_of_rules)):
-        score=fitness_function(list_of_rules[x], distance_grid)
+    for x in range(len(population)):
+        score=fitness_function(population[x], distance_grid)
         fitness_func.append(score)
     
-
-    index_list_of_score=sorted(range(len(fitness_func)), key=lambda k: fitness_func[k], reverse=True)
-    fitness_func.sort(reverse=True)
-    print(index_list_of_score)
+    print("Regola 1:")
+    population[0].print_rule()
+    print("Regola 2:")
+    population[1].print_rule()
+    print("Fitness funciton:")
     print(fitness_func)
-    list_of_rules[index_list_of_score[0]].print_rule_movement()
-    list_of_rules[index_list_of_score[0]].print_rule_arrow()
+
+    population, fitness_func, average_fitness_func = genetic_algorithm(distance_grid,
+                                                                       population,
+                                                                       fitness_func,
+                                                                       number_of_population=10,
+                                                                       chance_for_mutation=0.05,
+                                                                       number_of_generation=10)
+    
+    print("Nuova regola 1:")
+    population[0].print_rule()
+    print("Nuova regola 2:")
+    population[1].print_rule()
+    print("Nuova fitness funciton:")
+    print(fitness_func)
+    print("Average Fitness:")
+    print(average_fitness_func)
+    
+
+    #index_list_of_score=sorted(range(len(fitness_func)), key=lambda k: fitness_func[k], reverse=True)
+    #fitness_func.sort(reverse=True)
+    #print(index_list_of_score)
+    #print(fitness_func)
+    #list_of_rules[index_list_of_score[0]].print_rule_movement()
+    #list_of_rules[index_list_of_score[0]].print_rule_arrow()
     
     
     
