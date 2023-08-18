@@ -39,12 +39,20 @@ def proximity_score(distance):
 
 class FitnessCalculator:
     def __init__(self, movement_score, proximity_score, distance_grid):
+        """"
+        movement_score: a function that takes in the goal, the movement, and the position
+        and returns a score for that movement
+        proximity_score: a function that takes in the distance from the goal and returns a score
+        distance_grid: a 15x15 matrix of distances from the goal
+
+        """
         self.movement_score = movement_score
         self.proximity_score = proximity_score
         self.distance_grid = distance_grid
         self.goal = (np.where(distance_grid == 0)[0][0], np.where(distance_grid == 0)[1][0])
 
     def calculate_fitness(self, rule: RuleNew):
+        # calculate the fitness of a rule
         score = 0
         for x in range(15):
             for y in range(15):
@@ -71,8 +79,15 @@ def get_population_fitness(population, fitness_function: FitnessCalculator):
     return [fitness_function.calculate_fitness(rule) for rule in population]
 
 
+def get_population_fitness_matrix(population, fitness_function: FitnessCalculator):
+    # return the fitness of each position in the room for each rule in the population
+    return [fitness_function.fitness_matrix(rule) for rule in population]
+
+
 # show some examples of scores
 if __name__ == '__main__':
     rules = [RuleNew() for _ in range(2)]
     fitness_calculator = FitnessCalculator(movement_score, proximity_score, find_distance_grid(0, 0))
     print(get_population_fitness(rules, fitness_calculator))
+
+
