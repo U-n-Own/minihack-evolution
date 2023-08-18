@@ -13,7 +13,7 @@ Dictionary for movements. We have three ways to describe movements:
 -2: in words, for a quick understanding of where one moves
 -3: in coordinates, to understand how one moves on the matrix representing the room
 """
-step_dictionary = {
+int_to_words = {
     0 : "north",
     1 : "east",
     2 : "south",
@@ -24,7 +24,7 @@ step_dictionary = {
     7 : "north-west",
 }
 
-movement_dictionary = {
+int_to_coord = {
     0 : [-1, 0],
     1 : [0, 1],
     2 : [1,0],
@@ -46,13 +46,17 @@ def print_room(environment):
         print('\n')
 
 
-def search_environment_indexes(environment):
-#We search the indexes to find the 15x15 submatrix representing the MiniHack task room.
+def search_environment_indexes(environment:np.ndarray):
+    # return the minimum (row, col) where  environment[row, col] = 32, as a tuple
+    if len(np.where(environment==32)[0])==0:
+        print("WARNING: environment is empty")
+        return None
+    indexes= np.where(environment==32)
+    return indexes[0][0], indexes[1][0]
 
-    for row in range(len(environment[:,1])):
-        for col in range(len(environment[1,:])):
-            if int(environment[row][col]) != 32:
-                return row, col      
+
+
+
 
 
 def search_environment_agent_position(environment: np.ndarray):
@@ -61,11 +65,13 @@ def search_environment_agent_position(environment: np.ndarray):
     MiniHack passes us the position of the agent in the array with the 
     value of 64, which in ASCII turns into @.
     '''
-    for row in range(len(environment[:,1])):
-        for col in range(len(environment[1,:])):
-            if int(environment[row][col]) == 64:  
-                return row, col
-
+    indexes = np.where(environment == 64)
+    if len(indexes[0]) > 1:
+        print("WARNING: more than one agent in the environment")
+    if len(indexes[0]) == 0:
+        print("WARNING: no agent in the environment")
+        return None
+    return indexes[0][0], indexes[1][0]
 
 def search_environment_goal_position(environment: np.ndarray):
     """ 
@@ -73,10 +79,14 @@ def search_environment_goal_position(environment: np.ndarray):
     MiniHack passes us the position of the stairs going down in the matrix 
     with the value of 62, which in ASCII turns into >.
     """
-    for row in range(len(environment[:,1])):
-        for col in range(len(environment[1,:])):
-            if int(environment[row][col]) == 62:
-                return row, col
+    if len(np.where(environment == 62)[0]) > 1:
+        print("WARNING: more than one goal in the environment")
+    if len(np.where(environment == 62)[0]) == 0:
+        print("WARNING: no goal in the environment")
+        return None
+
+    indexes = np.where(environment == 62)
+    return indexes[0][0], indexes[1][0]
 
 
     
