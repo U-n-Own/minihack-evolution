@@ -8,7 +8,7 @@ import random
 import numpy as np
 import sys
 sys.path.append("../")
-from genetic_room.utility_func import int_to_coord
+from utility_func import int_to_coord
 
 
 class RuleNew:

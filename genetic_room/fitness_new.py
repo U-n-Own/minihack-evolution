@@ -2,7 +2,7 @@ import numpy as np
 import sys
 
 sys.path.append("../")
-from genetic_room.utility_func import int_to_coord
+from utility_func import int_to_coord
 from rules_new import RuleNew, make_rule_good
 import time
 
@@ -11,7 +11,7 @@ def find_distance_grid(goal_x, goal_y, shape: tuple = (15, 15)):
     # return a 15x15 matrix of distances from the goal in infinite norm
     # distance_grid[x][y] is the distance from (x,y) to the goal
     # distance_grid[goal_x][goal_y] is 0
-    distance_grid = np.zeros(*shape, dtype=int)
+    distance_grid = np.zeros(shape, dtype=int)
     for x in range(15):
         for y in range(15):
             distance_grid[x][y] = max(np.abs(x - goal_x), np.abs(y - goal_y))
