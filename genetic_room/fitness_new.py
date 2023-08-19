@@ -3,7 +3,7 @@ import sys
 
 sys.path.append("../")
 from utility_func import int_to_coord
-from rules_new import RuleNew, make_rule_good
+from rules_new import RuleNew 
 import time
 
 
@@ -73,6 +73,7 @@ class FitnessCalculator:
                 if self.distance_grid[x, y] != 0:
                     fitness_matrix[x, y] = self.movement_score(self.goal, rule.get_movement(x, y), (x, y)) * \
                                            self.proximity_score(self.distance_grid[x, y])
+        return fitness_matrix
 
 def get_population_fitness(population, fitness_function: FitnessCalculator):
     # return the fitness of each rule in the population

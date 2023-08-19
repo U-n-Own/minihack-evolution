@@ -1,5 +1,5 @@
 import numpy as np
-from rules_new import RuleNew, make_rule_good
+from rules_new import RuleNew 
 from tqdm import tqdm
 
 def choose_rules(fitness_list: list, n_rules=100):
@@ -27,7 +27,7 @@ def mutation(chance_for_mutation, rule):
 
         rule.rules_grid[x, y] = np.random.randint(0, 7)  # mutation
 
-    rule = make_rule_good(rule)
+    #rule = make_rule_good(rule)
     return rule
 
 
