@@ -55,10 +55,6 @@ def search_environment_indexes(environment:np.ndarray):
     return indexes[0][0], indexes[1][0]
 
 
-
-
-
-
 def search_environment_agent_position(environment: np.ndarray):
     '''
     Return agent position inside the environment.

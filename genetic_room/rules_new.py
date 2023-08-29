@@ -12,6 +12,7 @@ from utility_func import int_to_coord
 
 
 class RuleNew:
+
     def __init__(self):
         """
         initialize the rule as a matrix such that
@@ -53,7 +54,7 @@ def good_rule(rule: RuleNew):
     return all(good_movement((x, y), rule.get_movement(x, y)) for x in range(15) for y in range(15))
 
 
-''' Remove this function
+
 
 def make_rule_good(rule):
     for x in range(1, 14):
@@ -76,7 +77,7 @@ def make_rule_good(rule):
         rule.set_movement(14, 0, random.randint(0, 7))
 
     return rule
-'''
+
 
 arrow_dictionary = {
     0: "\u2191",
@@ -98,7 +99,7 @@ def print_rule(rule):
 
 
 def initial_population(size=100):
-    return [RuleNew() for _ in range(size)]  # 100 rules
+    return [RuleNew() for _ in range(size)]  # size rules
 
 
 if __name__ == '__main__':

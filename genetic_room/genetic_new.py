@@ -1,5 +1,5 @@
 import numpy as np
-from rules_new import RuleNew 
+from rules_new import RuleNew, good_movement, make_rule_good
 from tqdm import tqdm
 
 def choose_rules(fitness_list: list, n_rules=100):
@@ -19,15 +19,18 @@ def mutation(chance_for_mutation, rule):
     probability for each position in the room.
     '''
     mutation_matrix = np.random.random(size=(15, 15))
-    mutation_indexes = np.where(mutation_matrix < chance_for_mutation)
+    mutation_x, mutation_y = np.where(mutation_matrix < chance_for_mutation)
 
-    for i in range(len(mutation_indexes[0])):
-        x = mutation_indexes[0][i]
-        y = mutation_indexes[1][i]
+    for i in range(len(mutation_x)):
+        x = mutation_x[i]
+        y = mutation_y[i]
 
         rule.rules_grid[x, y] = np.random.randint(0, 7)  # mutation
-
-    #rule = make_rule_good(rule)
+        movement= rule.rules_grid[x,y]
+        while not good_movement((x,y), movement):
+            rule.rules_grid[x, y] = np.random.randint(0, 7)  # mutation
+            movement=rule.rules_grid[x,y]
+    
     return rule
 
 
