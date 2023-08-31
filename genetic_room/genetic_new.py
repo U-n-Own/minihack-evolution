@@ -97,16 +97,15 @@ def genetic_algorithm(distance_grid,
                       n_iterations,
                       elitism=0
                       ):
-    sum_fitness_epoch = np.zeros((n_iterations,))
+    mean_fitness_epoch = np.zeros((n_iterations,))
     for i in tqdm(range(n_iterations)):
-        temperature = 1 - i / n_iterations
+        temperature = 1 - i / n_iterations  # temperature for mutations. Goes down linearly.
         if elitism > 0:
             sort_ind = np.argsort(fitness_list)
             fitness_list = fitness_list[sort_ind]
             population = population[sort_ind]
             best_rules = population[-elitism::]
             best_fitness = fitness_list[-elitism::]
-            print(best_fitness)
         population, fitness_list = genetic_algorithm_iteration(distance_grid,
                                                                population,
                                                                fitness_calculator,
@@ -117,15 +116,13 @@ def genetic_algorithm(distance_grid,
         fitness_list = np.array(fitness_list)
         population = np.array(population)
         if elitism > 0:
-            print(best_fitness)
             population=np.append(population, best_rules)
             fitness_list=np.append(fitness_list, best_fitness)
-            print(fitness_list)
-        sum_fitness_epoch[i] = np.sum(fitness_list)
+        mean_fitness_epoch[i] = np.sum(fitness_list)/len(fitness_list)
         if np.min(fitness_list) < 0:
             fitness_list = fitness_list - np.min(fitness_list)
 
-    return population, fitness_list, sum_fitness_epoch
+    return population, fitness_list, mean_fitness_epoch
 
 
 if __name__ == '__main__':
@@ -133,7 +130,7 @@ if __name__ == '__main__':
     from fitness_new import FitnessCalculator, proximity_score, movement_score, get_population_fitness, \
         find_distance_grid
 
-    initial_pop = initial_population(20)
+    initial_pop = initial_population(200)
     for rule in initial_pop:
         make_rule_good(rule)
     # Some shenanigans to make the code work
@@ -153,6 +150,7 @@ if __name__ == '__main__':
                                                                    fitness_calculator=fitness_calculator,
                                                                    fitness_list=fitness_list,
                                                                    chance_for_mutation=0,
-                                                                   n_iterations=10,
-                                                                   n_rules=20,
-                                                                   elitism=2)
+                                                                   n_iterations=200,
+                                                                   n_rules=200,
+                                                                   elitism=5)
+    print(sum_fitnesses)
