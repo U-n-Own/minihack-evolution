@@ -2,6 +2,7 @@ import numpy as np
 from rules_new import RuleNew, good_movement, make_rule_good
 from tqdm import tqdm
 
+
 def choose_rules(fitness_list: list, n_rules=100):
     '''
     choose n_rules rules from the population according to their fitness
@@ -26,11 +27,11 @@ def mutation(chance_for_mutation, rule):
         y = mutation_y[i]
 
         rule.rules_grid[x, y] = np.random.randint(0, 7)  # mutation
-        movement= rule.rules_grid[x,y]
-        while not good_movement((x,y), movement):
+        movement = rule.rules_grid[x, y]
+        while not good_movement((x, y), movement):
             rule.rules_grid[x, y] = np.random.randint(0, 7)  # mutation
-            movement=rule.rules_grid[x,y]
-    
+            movement = rule.rules_grid[x, y]
+
     return rule
 
 
@@ -93,10 +94,19 @@ def genetic_algorithm(distance_grid,
                       fitness_list,
                       chance_for_mutation,
                       n_rules,
-                      n_iterations):
-    sum_fitness_epoch=np.zeros((n_iterations,))
+                      n_iterations,
+                      elitism=0
+                      ):
+    sum_fitness_epoch = np.zeros((n_iterations,))
     for i in tqdm(range(n_iterations)):
         temperature = 1 - i / n_iterations
+        if elitism > 0:
+            sort_ind = np.argsort(fitness_list)
+            fitness_list = fitness_list[sort_ind]
+            population = population[sort_ind]
+            best_rules = population[-elitism::]
+            best_fitness = fitness_list[-elitism::]
+            print(best_fitness)
         population, fitness_list = genetic_algorithm_iteration(distance_grid,
                                                                population,
                                                                fitness_calculator,
@@ -105,6 +115,12 @@ def genetic_algorithm(distance_grid,
                                                                n_rules)
 
         fitness_list = np.array(fitness_list)
+        population = np.array(population)
+        if elitism > 0:
+            print(best_fitness)
+            population=np.append(population, best_rules)
+            fitness_list=np.append(fitness_list, best_fitness)
+            print(fitness_list)
         sum_fitness_epoch[i] = np.sum(fitness_list)
         if np.min(fitness_list) < 0:
             fitness_list = fitness_list - np.min(fitness_list)
@@ -112,3 +128,31 @@ def genetic_algorithm(distance_grid,
     return population, fitness_list, sum_fitness_epoch
 
 
+if __name__ == '__main__':
+    from rules_new import initial_population
+    from fitness_new import FitnessCalculator, proximity_score, movement_score, get_population_fitness, \
+        find_distance_grid
+
+    initial_pop = initial_population(20)
+    for rule in initial_pop:
+        make_rule_good(rule)
+    # Some shenanigans to make the code work
+
+    goal = (2, 3)
+    agent = (8, 6)
+    distance_grid = find_distance_grid(*goal)
+
+    fitness_calculator = FitnessCalculator(movement_score, proximity_score, distance_grid)
+
+    fitness_list = get_population_fitness(initial_pop, fitness_calculator)
+    fitness_list = np.array(fitness_list)
+    initial_pop=np.array(initial_pop)
+    fitness_list = fitness_list - np.min(fitness_list)
+    new_population, new_fitness, sum_fitnesses = genetic_algorithm(distance_grid=distance_grid,
+                                                                   population=initial_pop,
+                                                                   fitness_calculator=fitness_calculator,
+                                                                   fitness_list=fitness_list,
+                                                                   chance_for_mutation=0,
+                                                                   n_iterations=10,
+                                                                   n_rules=20,
+                                                                   elitism=2)
