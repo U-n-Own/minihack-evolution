@@ -84,6 +84,15 @@ def get_population_fitness_matrix(population, fitness_function: FitnessCalculato
     # return the fitness of each position in the room for each rule in the population
     return [fitness_function.fitness_matrix(rule) for rule in population]
 
+def compute_best_fitness(distance_grid):
+    # return the best fitness value for the room
+    score = 0
+    for x in range(15):
+        for y in range(15):
+            if distance_grid[x, y] != 0:
+                    score += 1 / np.sqrt(distance_grid[x, y])
+    return score
+
 
 # show some examples of scores
 if __name__ == '__main__':
