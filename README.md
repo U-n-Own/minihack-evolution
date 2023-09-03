@@ -34,4 +34,5 @@ Applying a classic genetic algorithm, we show that after some generations the ru
 - [Giacomo Lagomarsini](https://github.com/g-lago8)
 - [Angelo Nardone](https://github.com/Angelido)
 
+
 Students of the Master's Degree in Computer Science at the University of Pisa.
