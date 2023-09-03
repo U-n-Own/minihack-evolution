@@ -24,10 +24,15 @@ The code we wrote does not require any additional installation, aside from `nump
 ## Task
 We mainly focused on the `MiniHack-Room-Random-15x15` environment, which is a gridworld environment where the agent has to reach a goal position in the map.
 
+#### Run example
+<p align="center">
+  <img src="genetic_room/gif/room_task.gif" alt="animated" width="250" height="250"/>
+
 
 ## Genetic Algorithm
 The initial population is composed of individuals that are randomly generated grids of size $15 \times 15$, where each cell has a random movement.
 Applying a classic genetic algorithm, we show that after some generations the rules of the game are learned and the agent is able to reach the goal position.
+
 
 ## Authors
 - [Vincenzo Gargano](https://github.com/U-n-Own)
